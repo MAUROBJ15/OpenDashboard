@@ -34,9 +34,9 @@ export default function Home() {
             <div className="hidden md:flex items-center gap-2 pl-6 border-l border-white/[0.08]">
               <span className="text-[10px] text-slate-500 font-bold uppercase mr-1">Squad</span>
               {agents.map((agent) => (
-                <div key={agent.name} className="flex items-center gap-2 px-2 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] hover:bg-white/[0.08] transition-colors cursor-default group">
-                  <div className={`w-1.5 h-1.5 rounded-full ${agent.status === 'Online' ? 'bg-emerald-400' : 'bg-slate-600'}`} />
-                  <span className="text-xs text-slate-300 font-medium">{agent.name}</span>
+                <div key={agent.name} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.1] hover:bg-white/[0.1] transition-all cursor-default group shadow-sm">
+                  <div className={`w-2 h-2 rounded-full shadow-[0_0_8px] ${agent.status === 'Online' ? 'bg-emerald-400 shadow-emerald-500/50' : 'bg-slate-500 shadow-none'}`} />
+                  <span className={`text-xs font-medium ${agent.status === 'Online' ? 'text-white' : 'text-slate-400'}`}>{agent.name}</span>
                 </div>
               ))}
             </div>
