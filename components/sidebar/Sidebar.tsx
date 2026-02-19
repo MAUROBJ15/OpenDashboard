@@ -25,6 +25,11 @@ const navItems = [
   { icon: MessageSquare, label: 'Chat', href: '/chat' },
 ];
 
+import { Sidebar } from "@/components/sidebar/Sidebar";
+import { Header } from "@/components/layout/Header";
+import { ThemeProvider } from "@/components/theme-provider";
+import { NewMissionModal } from "@/components/missions/NewMissionModal";
+
 export function Sidebar() {
   const pathname = usePathname();
 
@@ -41,10 +46,7 @@ export function Sidebar() {
       </div>
 
       <div className="px-4 mb-4">
-        <Button className="w-full justify-start gap-2 bg-primary/10 text-primary hover:bg-primary/20 border-none">
-          <PlusCircle className="h-4 w-4" />
-          <span className="text-xs font-semibold">New Mission</span>
-        </Button>
+        <NewMissionModal />
       </div>
 
       <nav className="flex-1 px-4 py-4 space-y-1">

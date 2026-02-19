@@ -8,7 +8,9 @@ import KanbanBoard from "@/components/kanban/Board";
 import ChatWidget from "@/components/chat/ChatWidget";
 import UsageStats from "@/components/billing/UsageStats";
 import { agents } from "@/lib/types";
-import { Activity, Zap, Shield, Cpu } from "lucide-react";
+import { Activity, Zap, Shield, Cpu, Plus } from "lucide-react";
+import { NewMissionModal } from "@/components/missions/NewMissionModal";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const squad = agents.slice(0, 4); // Mostra os 4 primeiros no overview
@@ -23,6 +25,12 @@ export default function Home() {
           <p className="text-muted-foreground text-sm">Monitoramento em tempo real do ecossistema OpenMauro.</p>
         </div>
         <div className="flex items-center gap-3">
+          <NewMissionModal>
+            <Button size="sm" className="gap-2 shadow-lg shadow-primary/20">
+              <Plus className="h-4 w-4" />
+              Nova Missão
+            </Button>
+          </NewMissionModal>
           <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 px-3 py-1 gap-2">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             Sistemas Online
