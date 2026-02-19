@@ -19,10 +19,9 @@ import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSo
 import { CSS } from '@dnd-kit/utilities';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Task } from '@/lib/types'; // Importando tipo centralizado
+import { Task, TaskStatus } from '@/lib/types'; // Importando tipo centralizado
 
 // --- Types ---
-type TaskStatus = 'todo' | 'in-progress' | 'done';
 
 type Column = {
   id: TaskStatus;
@@ -30,7 +29,8 @@ type Column = {
 };
 
 const columns: Column[] = [
-  { id: 'todo', title: 'A Fazer' },
+  { id: 'scheduled', title: 'Agendadas' },
+  { id: 'queue', title: 'Fila' },
   { id: 'in-progress', title: 'Em Progresso' },
   { id: 'done', title: 'Concluído' },
 ];
@@ -239,7 +239,7 @@ export default function KanbanBoard() {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-full min-h-[500px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-full min-h-[500px]">
         {columns.map((col) => (
           <KanbanColumn 
             key={col.id} 
