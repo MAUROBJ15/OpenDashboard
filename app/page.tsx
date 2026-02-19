@@ -1,144 +1,170 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ThemeToggle } from "@/components/theme-toggle";
-import KanbanBoard from "@/components/kanban/Board";
-import ChatWidget from "@/components/chat/ChatWidget";
-import UsageStats from "@/components/billing/UsageStats";
+import { agents } from "@/lib/types";
+import {
+  DollarSign,
+  Zap,
+  MessageSquare,
+  Activity,
+  ArrowUpRight,
+  Clock,
+} from "lucide-react";
 
-const agents = [
-  { name: "Maestro", role: "Coordenação", status: "online", initials: "MA", color: "bg-blue-500" },
-  { name: "Rex", role: "DevOps / Code", status: "online", initials: "RE", color: "bg-green-500" },
-  { name: "Luna", role: "Admin / Backup", status: "idle", initials: "LU", color: "bg-purple-500" },
-  { name: "Scout", role: "Pesquisa", status: "offline", initials: "SC", color: "bg-slate-500" },
+const stats = [
+  { label: "Custo Hoje", value: "$0.73", icon: DollarSign, trend: "-12%", trendUp: false },
+  { label: "Custo Mês", value: "$8.00", icon: DollarSign, trend: "+4%", trendUp: true },
+  { label: "Tokens Usados", value: "1.95M", icon: Zap, trend: "+18%", trendUp: true },
+  { label: "Conversas", value: "42", icon: MessageSquare, trend: "+6", trendUp: true },
 ];
 
-export default function Home() {
+const recentActivity = [
+  { agent: "Rex", action: "Commit push: redesign dashboard", time: "há 2 min", color: "bg-emerald-500" },
+  { agent: "Maestro", action: "Delegou tarefa para Pixel", time: "há 15 min", color: "bg-blue-500" },
+  { agent: "Luna", action: "Backup diário concluído", time: "há 1h", color: "bg-purple-500" },
+  { agent: "Hawk", action: "Code review aprovado", time: "há 2h", color: "bg-amber-500" },
+  { agent: "Scout", action: "Pesquisa de ferramentas finalizada", time: "há 3h", color: "bg-slate-500" },
+];
+
+export default function DashboardPage() {
+  const onlineAgents = agents.filter((a) => a.status === "online").length;
+  const totalAgents = agents.length;
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0B0D12] text-slate-900 dark:text-white antialiased transition-colors duration-300">
-
-      {/* ── HEADER ── */}
-      <header className="sticky top-0 z-50 border-b border-slate-200 dark:border-white/[0.06] bg-white/90 dark:bg-[#0B0D12]/90 backdrop-blur-lg">
-        <div className="mx-auto flex h-14 max-w-[1800px] items-center justify-between px-6">
-          {/* Logo */}
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-sm">
+        <div className="flex h-14 items-center justify-between px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-xs font-black text-white">OM</div>
-            <div className="leading-tight">
-              <p className="text-sm font-semibold tracking-tight">Centro de Comando</p>
-              <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest">OpenMauro HQ</p>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">
+              {new Date().toLocaleDateString("pt-BR", {
+                weekday: "short",
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+              {" · "}
+              {new Date().toLocaleTimeString("pt-BR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Hoje</p>
+              <p className="text-sm font-semibold">$0.73</p>
             </div>
-          </div>
-
-          {/* Squad pills */}
-          <div className="hidden md:flex items-center gap-1.5">
-            {agents.map((a) => (
-              <div
-                key={a.name}
-                className="flex items-center gap-1.5 rounded-full border border-slate-200 dark:border-white/[0.06] bg-slate-100 dark:bg-white/[0.03] px-2.5 py-1 text-[11px] text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/[0.06] transition-colors"
-              >
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    a.status === "online"
-                      ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,.6)]"
-                      : a.status === "idle"
-                      ? "bg-amber-400"
-                      : "bg-slate-400 dark:bg-slate-600"
-                  }`}
-                />
-                {a.name}
-              </div>
-            ))}
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Badge className="border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px]">
-              Sistema Online
-            </Badge>
-            <Button
-              size="sm"
-              className="h-7 bg-blue-600 px-3 text-xs font-medium text-white hover:bg-blue-500 shadow-[0_0_12px_rgba(59,130,246,.25)]"
-            >
-              + Nova Missão
-            </Button>
+            <div className="h-6 w-px bg-border" />
+            <div className="text-right">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Fev</p>
+              <p className="text-sm font-semibold">$8.00</p>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* ── BODY ── */}
-      <div className="mx-auto max-w-[1800px] p-5 space-y-5">
-
-        {/* ROW 1 ─ Squad + Stats + Chat */}
-        <div className="grid grid-cols-12 gap-5">
-
-          {/* Squad Ativo */}
-          <section className="col-span-12 md:col-span-3 lg:col-span-2 space-y-1.5">
-            <h2 className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">Squad Ativo</h2>
-            {agents.map((a) => (
-              <div
-                key={a.name}
-                className="flex items-center gap-3 rounded-xl border border-slate-200 dark:border-white/[0.04] bg-white dark:bg-[#12141A] px-3 py-2.5 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors shadow-sm dark:shadow-none"
-              >
-                <Avatar className="h-9 w-9 border border-slate-200 dark:border-white/[0.08]">
-                  <AvatarFallback className={`${a.color} text-[11px] font-bold text-white`}>
-                    {a.initials}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[13px] font-medium leading-none truncate">{a.name}</p>
-                  <p className="mt-0.5 flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
-                    <span
-                      className={`inline-block h-1.5 w-1.5 rounded-full ${
-                        a.status === "online"
-                          ? "bg-emerald-400"
-                          : a.status === "idle"
-                          ? "bg-amber-400"
-                          : "bg-slate-400 dark:bg-slate-600"
-                      }`}
-                    />
-                    {a.role}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </section>
-
-          {/* Usage & Costs */}
-          <section className="col-span-12 md:col-span-9 lg:col-span-7 rounded-xl border border-slate-200 dark:border-white/[0.04] bg-white dark:bg-[#12141A] overflow-hidden shadow-sm dark:shadow-none">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.04] px-5 py-3">
-              <h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Performance & Custos</h2>
-              <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20 text-[10px]">
-                Fevereiro 2026
-              </Badge>
-            </div>
-            <div className="p-4 h-[320px]">
-              <UsageStats />
-            </div>
-          </section>
-
-          {/* Chat */}
-          <section className="col-span-12 lg:col-span-3 h-[400px]">
-            <ChatWidget />
-          </section>
+      <div className="p-6 space-y-6">
+        {/* Title */}
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {onlineAgents} de {totalAgents} agentes online · Sistema operacional
+          </p>
         </div>
 
-        {/* ROW 2 ─ Kanban */}
-        <section className="rounded-xl border border-slate-200 dark:border-white/[0.04] bg-white dark:bg-[#12141A] overflow-hidden shadow-sm dark:shadow-none">
-          <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.04] px-5 py-3">
-            <div className="flex items-center gap-2">
-              <span className="h-4 w-1 rounded-full bg-emerald-500" />
-              <h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Missões & Tarefas</h2>
-            </div>
-            <p className="text-[10px] text-slate-400 dark:text-slate-600">Arraste os cards para mover</p>
-          </div>
-          <div className="p-5">
-            <KanbanBoard />
-          </div>
-        </section>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {stats.map((stat) => (
+            <Card key={stat.label} className="bg-card border-border">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 p-4">
+                <CardDescription className="text-xs font-medium">{stat.label}</CardDescription>
+                <stat.icon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <p className={`text-xs mt-1 flex items-center gap-1 ${stat.trendUp ? "text-emerald-500" : "text-red-500"}`}>
+                  <ArrowUpRight className={`h-3 w-3 ${!stat.trendUp ? "rotate-90" : ""}`} />
+                  {stat.trend} vs semana passada
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Squad Ativo */}
+          <Card className="lg:col-span-1 bg-card border-border">
+            <CardHeader className="p-4 pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-semibold">Squad Ativo</CardTitle>
+                <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px]">
+                  {onlineAgents} online
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 pt-0 space-y-2">
+              {agents.map((agent) => (
+                <div
+                  key={agent.id}
+                  className="flex items-center gap-3 rounded-lg p-2 hover:bg-accent transition-colors"
+                >
+                  <Avatar className="h-8 w-8 border border-border">
+                    <AvatarFallback className={`${agent.color} text-[10px] font-bold text-white`}>
+                      {agent.initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium truncate">{agent.name}</p>
+                    <p className="text-[10px] text-muted-foreground">{agent.role}</p>
+                  </div>
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      agent.status === "online"
+                        ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,.5)]"
+                        : agent.status === "idle"
+                        ? "bg-amber-400"
+                        : "bg-slate-400 dark:bg-slate-600"
+                    }`}
+                  />
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Atividade Recente */}
+          <Card className="lg:col-span-2 bg-card border-border">
+            <CardHeader className="p-4 pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-semibold">Atividade Recente</CardTitle>
+                <Activity className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 pt-0">
+              <div className="space-y-3">
+                {recentActivity.map((item, i) => (
+                  <div key={i} className="flex items-start gap-3 rounded-lg p-2 hover:bg-accent transition-colors">
+                    <Avatar className="h-7 w-7 border border-border mt-0.5">
+                      <AvatarFallback className={`${item.color} text-[9px] font-bold text-white`}>
+                        {item.agent.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm">
+                        <span className="font-medium">{item.agent}</span>
+                        <span className="text-muted-foreground"> · {item.action}</span>
+                      </p>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground whitespace-nowrap mt-0.5">{item.time}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
