@@ -1,90 +1,91 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ThemeToggle } from "@/components/theme-toggle";
-import {
-  LayoutDashboard,
-  Bot,
-  ListTodo,
-  BarChart3,
-  MessageSquare,
-  Settings,
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { 
+  LayoutDashboard, 
+  CheckSquare, 
+  Users, 
+  BarChart3, 
+  MessageSquare, 
+  Settings, 
   LogOut,
-} from "lucide-react";
+  PlusCircle
+} from 'lucide-react';
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/agents", label: "Agentes", icon: Bot },
-  { href: "/tasks", label: "Tarefas", icon: ListTodo },
-  { href: "/usage", label: "Uso & Custos", icon: BarChart3 },
-  { href: "/chat", label: "Chat", icon: MessageSquare },
+  { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
+  { icon: CheckSquare, label: 'Tasks', href: '/tasks' },
+  { icon: Users, label: 'Agents', href: '/agents' },
+  { icon: BarChart3, label: 'Usage', href: '/usage' },
+  { icon: MessageSquare, label: 'Chat', href: '/chat' },
 ];
 
-export default function Sidebar() {
+export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 flex w-56 flex-col border-r border-border bg-card">
-      {/* Logo */}
-      <div className="flex h-14 items-center gap-2.5 border-b border-border px-5">
-        <Image src="/logo.svg" alt="OpenMauro" width={32} height={32} className="rounded-lg" />
-        <div className="leading-tight">
-          <p className="text-sm font-semibold tracking-tight">OMHQ</p>
-          <p className="text-[9px] text-muted-foreground uppercase tracking-widest">OpenMauro</p>
+    <aside className="w-64 bg-card border-r border-border flex flex-col h-screen sticky top-0">
+      <div className="p-6 flex items-center gap-3">
+        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+          <span className="text-primary-foreground font-bold">M</span>
+        </div>
+        <div className="flex flex-col">
+          <span className="font-bold text-sm">OpenMauro HQ</span>
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Command Center</span>
         </div>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 space-y-0.5 px-3 py-4">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                isActive
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
-              }`}
-            >
-              <item.icon className="h-4 w-4" />
-              {item.label}
-            </Link>
-          );
-        })}
+      <div className="px-4 mb-4">
+        <Button className="w-full justify-start gap-2 bg-primary/10 text-primary hover:bg-primary/20 border-none">
+          <PlusCircle className="h-4 w-4" />
+          <span className="text-xs font-semibold">New Mission</span>
+        </Button>
+      </div>
+
+      <nav className="flex-1 px-4 py-4 space-y-1">
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+              pathname === item.href 
+                ? "bg-primary text-primary-foreground font-medium" 
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+            )}
+          >
+            <item.icon className="h-4 w-4" />
+            {item.label}
+          </Link>
+        ))}
       </nav>
 
-      {/* Footer */}
-      <div className="border-t border-border p-3 space-y-2">
-        <div className="flex items-center gap-2 rounded-lg px-3 py-2">
-          <Avatar className="h-8 w-8 border border-border">
-            <AvatarFallback className="bg-blue-600 text-xs font-bold text-white">
-              MJ
-            </AvatarFallback>
+      <div className="p-4 border-t border-border mt-auto">
+        <div className="flex items-center gap-3 px-3 py-4 mb-2">
+          <Avatar className="h-9 w-9 border border-border">
+            <AvatarImage src="" />
+            <AvatarFallback className="bg-slate-200 dark:bg-slate-800 text-xs font-bold">MJ</AvatarFallback>
           </Avatar>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium truncate">Mauro</p>
-            <p className="text-[10px] text-muted-foreground">Admin</p>
+          <div className="flex flex-col min-w-0">
+            <span className="text-sm font-semibold truncate">Mauro Junior</span>
+            <span className="text-[10px] text-muted-foreground truncate">Super Admin</span>
           </div>
-          <ThemeToggle />
         </div>
-        <div className="flex gap-1">
-          <Link
-            href="/settings"
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-          >
-            <Settings className="h-3.5 w-3.5" />
-            Settings
-          </Link>
-          <button className="flex flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-foreground transition-colors">
-            <LogOut className="h-3.5 w-3.5" />
-            Logout
-          </button>
+        
+        <div className="space-y-1">
+          <Button variant="ghost" size="sm" className="w-full justify-start gap-3 text-muted-foreground">
+            <Settings className="h-4 w-4" />
+            <span className="text-xs">Settings</span>
+          </Button>
+          <Button variant="ghost" size="sm" className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10">
+            <LogOut className="h-4 w-4" />
+            <span className="text-xs">Logout</span>
+          </Button>
         </div>
       </div>
     </aside>
