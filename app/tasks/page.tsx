@@ -59,8 +59,8 @@ function TaskCard({ task, isOverlay }: { task: Task; isOverlay?: boolean }) {
   const style = { transform: CSS.Translate.toString(transform), transition };
 
   const agent = agents.find((a) => a.name === task.agent || a.id === task.agent);
-  const dateStr = task.created_at
-    ? new Date(task.created_at).toLocaleDateString("pt-BR", {
+  const dateStr = (task.created_at || task.createdAt)
+    ? new Date((task.created_at || task.createdAt) as string).toLocaleDateString("pt-BR", {
         weekday: "short",
         day: "numeric",
         month: "numeric",

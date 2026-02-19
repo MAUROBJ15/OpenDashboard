@@ -7,7 +7,8 @@ export type Task = {
   priority: 'Alta' | 'Média' | 'Baixa';
   status: TaskStatus;
   color: string;
-  createdAt: string;
+  createdAt?: string;
+  created_at?: string; // Adicionado para compatibilidade com o banco
 };
 
 export const agents = [
