@@ -1,93 +1,108 @@
+"use client";
 
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import KanbanBoard from "@/components/kanban/Board";
 import ChatWidget from "@/components/chat/ChatWidget";
-import UsageStats from "@/components/billing/UsageStats"; // Importando UsageStats
+import UsageStats from "@/components/billing/UsageStats";
+import { agents } from "@/lib/types";
+import { Activity, Zap, Shield, Cpu } from "lucide-react";
 
 export default function Home() {
-  const agents = [
-    { name: "Maestro", role: "Coordenação", status: "Online", avatar: "MA", color: "bg-blue-500" },
-    { name: "Rex", role: "DevOps/Code", status: "Online", avatar: "RE", color: "bg-green-500" },
-    { name: "Luna", role: "Admin/Backup", status: "Idle", avatar: "LU", color: "bg-purple-500" },
-    { name: "Scout", role: "Pesquisa", status: "Offline", avatar: "SC", color: "bg-gray-500" },
-  ];
+  const squad = agents.slice(0, 4); // Mostra os 4 primeiros no overview
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 p-8 font-sans">
-      {/* Header */}
-      <header className="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
+    <div className="space-y-8 animate-in fade-in duration-500">
+      
+      {/* Welcome Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Centro de Comando</h1>
-          <p className="text-slate-400">OpenMauro HQ • Sistema Operacional</p>
+          <h1 className="text-2xl font-bold tracking-tight">Centro de Comando</h1>
+          <p className="text-muted-foreground text-sm">Monitoramento em tempo real do ecossistema OpenMauro.</p>
         </div>
-        <div className="flex gap-4">
-          <Badge variant="outline" className="text-green-400 border-green-900 bg-green-950/30 px-3 py-1">
-            Sistema Online
+        <div className="flex items-center gap-3">
+          <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 px-3 py-1 gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            Sistemas Online
           </Badge>
-          <Button variant="secondary" size="sm">
-            Nova Missão
-          </Button>
+          <div className="text-xs font-medium text-muted-foreground border-l pl-3 border-border">
+            v2.1.0-beta
+          </div>
         </div>
-      </header>
+      </div>
 
-      {/* Grid Principal */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 min-h-[calc(100vh-200px)]">
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
         
-        {/* Coluna 1: Status dos Agentes */}
-        <div className="md:col-span-1 space-y-4 flex flex-col">
-          <h2 className="text-lg font-semibold text-slate-300 mb-2">Squad Ativo</h2>
-          <div className="space-y-2">
-            {agents.map((agent) => (
-              <Card key={agent.name} className="bg-slate-900 border-slate-800 hover:border-slate-700 transition-colors">
-                <CardContent className="flex items-center gap-4 p-3">
-                  <Avatar className="h-8 w-8 border-2 border-slate-700">
-                    <AvatarFallback className={`${agent.color} text-white text-xs font-bold`}>{agent.avatar}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm font-medium text-white">{agent.name}</p>
-                    <div className="flex items-center gap-2">
-                      <span className={`w-1.5 h-1.5 rounded-full ${agent.status === "Online" ? "bg-green-500 animate-pulse" : agent.status === "Idle" ? "bg-yellow-500" : "bg-gray-500"}`}></span>
-                      <span className="text-[10px] text-slate-400 uppercase tracking-wide">{agent.role}</span>
+        {/* Left Column: Squad & Chat */}
+        <div className="xl:col-span-1 space-y-6">
+          <section>
+            <div className="flex items-center gap-2 mb-4">
+              <Activity className="h-4 w-4 text-primary" />
+              <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Squad Ativo</h2>
+            </div>
+            <div className="grid grid-cols-1 gap-3">
+              {squad.map((agent) => (
+                <Card key={agent.id} className="bg-card border-border hover:shadow-md transition-all cursor-default overflow-hidden group">
+                  <CardContent className="flex items-center gap-4 p-4">
+                    <div className="relative">
+                      <Avatar className="h-10 w-10 border border-border shadow-sm">
+                        <AvatarFallback className={`${agent.color} text-white text-xs font-bold`}>
+                          {agent.initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-card rounded-full" />
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold truncate group-hover:text-primary transition-colors">{agent.name}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-medium truncate">{agent.role}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
 
-          {/* Widget de Chat */}
-          <div className="flex-1 mt-4">
-            <ChatWidget />
-          </div>
+          <section className="h-[400px] flex flex-col">
+            <div className="flex items-center gap-2 mb-4">
+              <Shield className="h-4 w-4 text-primary" />
+              <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Canal Seguro</h2>
+            </div>
+            <div className="flex-1 bg-card rounded-xl border border-border overflow-hidden shadow-inner">
+              <ChatWidget />
+            </div>
+          </section>
         </div>
 
-        {/* Coluna 2, 3 e 4: Kanban e Estatísticas (Tabulados) */}
-        <div className="md:col-span-3 space-y-6 flex flex-col">
+        {/* Right Column: Stats & Tasks */}
+        <div className="xl:col-span-3 space-y-8">
           
-          {/* Seção 1: Billing / Custos (Novo!) */}
-          <div className="h-[350px]">
-             <div className="flex justify-between items-center mb-2">
-               <h2 className="text-lg font-semibold text-slate-300">Usage & Costs</h2>
-               <div className="text-xs text-slate-500 bg-slate-900 px-2 py-1 rounded border border-slate-800">
-                 This Month
-               </div>
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-primary" />
+                <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Performance & Custo</h2>
+              </div>
             </div>
-            <UsageStats />
-          </div>
+            <div className="bg-card/50 p-1 rounded-2xl border border-border shadow-sm">
+              <UsageStats />
+            </div>
+          </section>
 
-          {/* Seção 2: Kanban */}
-          <div className="flex-1 min-h-[400px]">
-            <div className="flex justify-between items-center mb-2">
-               <h2 className="text-lg font-semibold text-slate-300">Missões & Tarefas</h2>
-               <div className="text-xs text-slate-500 bg-slate-900 px-2 py-1 rounded border border-slate-800">
-                 Arraste os cards para mover
-               </div>
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Cpu className="h-4 w-4 text-primary" />
+                <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Fluxo de Missões</h2>
+              </div>
+              <Badge variant="outline" className="text-[10px] bg-accent/50">Real-time Updates</Badge>
             </div>
-            <KanbanBoard />
-          </div>
+            <div className="bg-card/30 p-4 rounded-2xl border border-border/50">
+              <KanbanBoard />
+            </div>
+          </section>
           
         </div>
 
