@@ -1,10 +1,16 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { agents } from "@/lib/types";
-import { Clock, Bot, Cpu, Activity } from "lucide-react";
+import { Clock, Cpu, Activity, Wifi } from "lucide-react";
+
+const providerColors: Record<string, string> = {
+  'Google Free': 'bg-blue-500/10 text-blue-500 border-blue-500/20',
+  'NVIDIA Free': 'bg-green-500/10 text-green-500 border-green-500/20',
+  'Modal Free': 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20',
+};
 
 export default function AgentsPage() {
   const online = agents.filter((a) => a.status === "online").length;
@@ -24,16 +30,21 @@ export default function AgentsPage() {
               })}
             </span>
           </div>
-          <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px]">
-            {online} de {agents.length} online
-          </Badge>
+          <div className="flex items-center gap-3">
+            <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px]">
+              {online} de {agents.length} online
+            </Badge>
+            <Badge variant="outline" className="text-[10px] bg-emerald-500/5 text-emerald-500 border-emerald-500/20">
+              100% Free Tier
+            </Badge>
+          </div>
         </div>
       </header>
 
       <div className="p-6 space-y-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Agentes</h1>
-          <p className="text-sm text-muted-foreground mt-1">Squad completo do OpenMauro HQ</p>
+          <p className="text-sm text-muted-foreground mt-1">Squad completo · Todos operando em modelos gratuitos</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -69,6 +80,10 @@ export default function AgentsPage() {
                     <span>{agent.model}</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Wifi className="h-3.5 w-3.5" />
+                    <span>{agent.provider}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Activity className="h-3.5 w-3.5" />
                     <span>
                       {agent.status === "online"
@@ -91,14 +106,10 @@ export default function AgentsPage() {
                         : "bg-slate-500/10 text-slate-500"
                     }`}
                   >
-                    {agent.status === "online"
-                      ? "Online"
-                      : agent.status === "idle"
-                      ? "Idle"
-                      : "Offline"}
+                    {agent.status === "online" ? "Online" : agent.status === "idle" ? "Idle" : "Offline"}
                   </Badge>
-                  <Badge variant="secondary" className="text-[10px]">
-                    Antigravity
+                  <Badge variant="secondary" className={`text-[10px] ${providerColors[agent.provider] || 'bg-slate-500/10 text-slate-500'}`}>
+                    {agent.provider}
                   </Badge>
                 </div>
               </CardContent>
