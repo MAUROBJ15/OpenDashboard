@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -30,11 +31,10 @@ export default function Sidebar() {
     <aside className="fixed inset-y-0 left-0 z-40 flex w-56 flex-col border-r border-border bg-card">
       {/* Logo */}
       <div className="flex h-14 items-center gap-2.5 border-b border-border px-5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-xs font-black text-white">
-          OM
-        </div>
+        <Image src="/logo.svg" alt="OpenMauro" width={32} height={32} className="rounded-lg" />
         <div className="leading-tight">
           <p className="text-sm font-semibold tracking-tight">OMHQ</p>
+          <p className="text-[9px] text-muted-foreground uppercase tracking-widest">OpenMauro</p>
         </div>
       </div>
 
