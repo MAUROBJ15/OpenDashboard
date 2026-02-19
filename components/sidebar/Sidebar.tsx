@@ -25,9 +25,6 @@ const navItems = [
   { icon: MessageSquare, label: 'Chat', href: '/chat' },
 ];
 
-import { Sidebar } from "@/components/sidebar/Sidebar";
-import { Header } from "@/components/layout/Header";
-import { ThemeProvider } from "@/components/theme-provider";
 import { NewMissionModal } from "@/components/missions/NewMissionModal";
 
 export function Sidebar() {
